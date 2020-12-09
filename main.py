@@ -15,6 +15,7 @@ import numpy as np
 from os import listdir
 import pdb
 import math
+output_folder="./output"
 
 def distance(a,b):
 	return(math.sqrt( (int(a[0])-int(b[0]))**2 + (int(a[1])-int(b[1]))**2 + (int(a[2])-int(b[2]))**2))
@@ -52,7 +53,7 @@ def palette_swap(source_pokemon_filename,palette_pokemon_filename, color_format=
 	
 	for i,row in enumerate(source_pokemon_file):
 		for j,pixel in enumerate(row):
-			if pixel.tolist()!=[0,0,0,255] and pixel[3]!=[0]:
+			if pixel[3]!=[0]:
 				if color_format=="RGB":
 					source_pokemon_file[i][j]=nearest_color(pixel,palette_colors)
 				elif color_format=="HSV":
@@ -69,9 +70,17 @@ for filename in listdir():
 	if ".png" in filename:
 		files.append(filename)
 
+output_files=[]
+
+for filename in listdir(output_folder):
+	if ".png" in filename:
+		output_files.append(filename)
+
 for pokemon1 in files:
 	for pokemon2 in files:
-		Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("./output/{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]))
+		if not "{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]) in output_files:
+			Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("{}/{}-{}.png".format(output_folder,pokemon1.split(".")[0],pokemon2.split(".")[0]))
+			print(pokemon1,pokemon2)
 
 '''
 #testing code
