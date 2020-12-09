@@ -27,20 +27,12 @@ def load_image( infilename ) :
 
 def nearest_color(coords1, coords_list):
 	nearest_distance=float("inf")
-	print("new pixel")
 	for coords2 in coords_list:
 		if coords2[3]!=0:
 			color_dist = distance(coords1[0:3], coords2[0:3])
 			if color_dist<nearest_distance:
 				nearest_distance=color_dist
 				nearest_color=coords2
-			if 16 in coords1:
-					print("/n")
-					print("source pixel color: ",coords1)
-					print("test color replacement: ",coords2)
-					print("color distance: ",color_dist)
-					print("nearest distance: ",nearest_distance)
-					print("nearest color: ",nearest_color)
 	return nearest_color
 
 def palette_swap(source_pokemon_filename,palette_pokemon_filename, color_format="RGB"):
