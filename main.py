@@ -79,7 +79,7 @@ for filename in listdir():
 
 for pokemon1 in files:
 	for pokemon2 in files:
-		Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("./output5/{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]))
+		Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("./output/{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]))
 
 '''
 #testing code
