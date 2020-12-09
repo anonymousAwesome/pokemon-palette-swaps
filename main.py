@@ -1,13 +1,23 @@
-#to-do: The far upper-left corner of any sprite is almost certain to be background, so I could just tell the program to ignore that exact color.
+#WARNING: currently only compatible with non-indexed png files.  
+#If your folder contains indexed png files (you'll know because the program will crash),
+#use the included deindex.py to convert them.  It requires the third-party 
+#program ImageMagick.
+
+#to-do: add native indexed png compatibility
 
 #to-do: add HSV compatibility
+
+#to-do: The far upper-left corner of any sprite is almost certain to be 
+#background, so I could just tell the program to ignore that exact color.
 
 from PIL import Image
 import numpy as np
 from os import listdir
-from scipy.spatial import distance
-import colorsys
+import pdb
+import math
 
+def distance(a,b):
+	return(math.sqrt( (int(a[0])-int(b[0]))**2 + (int(a[1])-int(b[1]))**2 + (int(a[2])-int(b[2]))**2))
 
 def load_image( infilename ) :
     img = Image.open( infilename )
@@ -17,12 +27,20 @@ def load_image( infilename ) :
 
 def nearest_color(coords1, coords_list):
 	nearest_distance=float("inf")
+	print("new pixel")
 	for coords2 in coords_list:
 		if coords2[3]!=0:
-			color_dist = distance.euclidean(coords1[0:2], coords2[0:2])
+			color_dist = distance(coords1[0:3], coords2[0:3])
 			if color_dist<nearest_distance:
 				nearest_distance=color_dist
 				nearest_color=coords2
+			if 16 in coords1:
+					print("/n")
+					print("source pixel color: ",coords1)
+					print("test color replacement: ",coords2)
+					print("color distance: ",color_dist)
+					print("nearest distance: ",nearest_distance)
+					print("nearest color: ",nearest_color)
 	return nearest_color
 
 def palette_swap(source_pokemon_filename,palette_pokemon_filename, color_format="RGB"):
@@ -53,11 +71,6 @@ def palette_swap(source_pokemon_filename,palette_pokemon_filename, color_format=
 					pass
 	return source_pokemon_file
 
-
-#for each color in the source image, replace it with the nearest palette color.
-#display the result.
-#save the result to the hard drive.
-
 files=[]
 
 for filename in listdir():
@@ -66,4 +79,11 @@ for filename in listdir():
 
 for pokemon1 in files:
 	for pokemon2 in files:
-		Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("./output/{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]))
+		Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").save("./output5/{}-{}.png".format(pokemon1.split(".")[0],pokemon2.split(".")[0]))
+
+'''
+#testing code
+pokemon1="BW-104.png"
+pokemon2="BW-575.png"
+Image.fromarray(palette_swap(pokemon1, pokemon2),mode="RGBA").resize((400,400)).show()
+'''
